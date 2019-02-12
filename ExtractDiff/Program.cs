@@ -23,6 +23,14 @@ namespace ExtractDiff
 
             workingDirectory = args[0];
             packageName = args[1];
+            if (args.Length > 4)
+            {
+                packageNameVersionIndexOf = args[4];
+            }
+            else
+            {
+                packageNameVersionIndexOf = packageName + ".";
+            }
             //var oldPackagePath = args[2];
             var newPackageVersion = args[2];
             if (Version.TryParse(newPackageVersion, out var newVersion) == false)
@@ -43,14 +51,7 @@ namespace ExtractDiff
             {
                 oldVersion = new Version(newVersion.Major, newVersion.Minor, newVersion.Build - 1);
             }
-            if (args.Length > 4)
-            {
-                packageNameVersionIndexOf = args[4];
-            }
-            else
-            {
-                packageNameVersionIndexOf = packageName + ".";
-            }
+
             Console.WriteLine($"Running with values workingDirectory {workingDirectory}, packageName: {packageName}, newPackageVersion: {newPackageVersion}, packageNameVersionIndexOf: {packageNameVersionIndexOf}");
 
             // Cough cough: "Dependency Injection"?
@@ -85,8 +86,10 @@ namespace ExtractDiff
 
         private static string GetVersionFromPackage(string packagePath)
         {
+            Console.WriteLine($"Trying to get version form file {packagePath}");
             var fileName = Path.GetFileNameWithoutExtension(packagePath);
             var versionPart = fileName.Substring(packageNameVersionIndexOf.Length);
+            Console.WriteLine($"Returning version {versionPart} from filePath {packagePath}");
             return versionPart;
         }
 

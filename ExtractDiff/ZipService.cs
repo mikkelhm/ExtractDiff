@@ -8,6 +8,20 @@ namespace ExtractDiff
     public class ZipService
     {
 
+        public void Extract(string packagePath)
+        {
+            if (File.Exists(packagePath))
+            {
+                var extractDir = packagePath.Replace(".zip", "");
+                if (Directory.Exists(extractDir) == false)
+                    ExtractZipFile(packagePath, packagePath.Replace(".zip", ""));
+            }
+            else
+            {
+                throw new ArgumentException($"Unable to find package at path {packagePath}", nameof(packagePath));
+            }
+        }
+
         /// <summary>
         /// Extracts an zip file to a specified output folder using the ICSharpCode.SharpZipLib 
         /// NB. Empty folders in the zip aren't extracted
@@ -60,8 +74,10 @@ namespace ExtractDiff
             }
             catch (Exception e)
             {
+                Logger.LogError($"Error while extracting file {archiveFilenameIn} to path {outFolder}", e);
                 return false;
             }
+            Logger.LogInformation($"Extracted package {archiveFilenameIn} to path {outFolder}");
             return true;
         }
 
@@ -84,6 +100,7 @@ namespace ExtractDiff
 
             zipStream.IsStreamOwner = true; // Makes the Close also Close the underlying stream
             zipStream.Close();
+            Logger.LogInformation($"Folder {folderName} was archived to {outPathname}");
         }
 
         // Recurses down the folder structure

@@ -22,6 +22,7 @@ namespace ExtractDiff
             string packageName = "";
             string newPackageVersion = "";
             string packageNamePart = "";
+            string downloadUrlPattern = "";
 
             if (args.Length > 0)
                 workingDirectory = args[0];
@@ -31,8 +32,10 @@ namespace ExtractDiff
                 newPackageVersion = args[2];
             if (args.Length > 3)
                 packageNamePart = args[3];
+            if (args.Length > 4)
+                downloadUrlPattern = args[4];
 
-            Logger.LogInformation($"Running with values workingDirectory {workingDirectory}, packageName: {packageName}, newPackageVersion: {newPackageVersion}, packageNamePart: {packageNamePart}");
+            Logger.LogInformation($"Running with values workingDirectory {workingDirectory}, packageName: {packageName}, newPackageVersion: {newPackageVersion}, packageNamePart: {packageNamePart}, downloadUrlPattern: {downloadUrlPattern}");
 
             // Validate Params
             if (string.IsNullOrWhiteSpace(workingDirectory))
@@ -48,7 +51,7 @@ namespace ExtractDiff
 
             // Cough cough: "Dependency Injection"?
             _zipService = new ZipService();
-            _packageManager = new PackageManager("https://umbracoreleases.blob.core.windows.net/download/UmbracoCms.{version}.zip");
+            _packageManager = new PackageManager(downloadUrlPattern);
             _diffService = new DiffService(_packageManager, _zipService, workingDirectory);
 
             if (Version.TryParse(newPackageVersion, out var newVersion) == false)

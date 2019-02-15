@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 
@@ -136,6 +137,36 @@ namespace ExtractDiff
             {
                 CompressFolder(folder, zipStream, folderOffset);
             }
+        }
+
+
+        public void DeleteEmptyDirs(string dir)
+        {
+            if (String.IsNullOrEmpty(dir))
+                throw new ArgumentException(
+                    "Starting directory is a null reference or an empty string",
+                    "dir");
+
+            try
+            {
+                foreach (var d in Directory.EnumerateDirectories(dir))
+                {
+                    DeleteEmptyDirs(d);
+                }
+
+                var entries = Directory.EnumerateFileSystemEntries(dir);
+
+                if (!entries.Any())
+                {
+                    try
+                    {
+                        Directory.Delete(dir);
+                    }
+                    catch (UnauthorizedAccessException) { }
+                    catch (DirectoryNotFoundException) { }
+                }
+            }
+            catch (UnauthorizedAccessException) { }
         }
     }
 }

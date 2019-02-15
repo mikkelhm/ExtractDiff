@@ -28,7 +28,7 @@ namespace ExtractDiff
                 diffWorkDir.DeleteDirectory();
 
             CopyDirectory(newPackagePath.Replace(".zip", ""), diffWorkDir, oldPackagePath.Replace(".zip", ""));
-
+            _zipService.DeleteEmptyDirs(diffWorkDir);
             _zipService.CreateZip(diffWorkDir + ".zip", diffWorkDir);
             diffWorkDir.DeleteDirectory();
         }

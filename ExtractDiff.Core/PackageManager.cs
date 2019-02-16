@@ -2,7 +2,7 @@
 using System.IO;
 using System.Net;
 
-namespace ExtractDiff
+namespace ExtractDiff.Core
 {
     public class PackageManager
     {

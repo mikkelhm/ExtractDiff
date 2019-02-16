@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ExtractDiff
+namespace ExtractDiff.Core
 {
     public class Logger
     {

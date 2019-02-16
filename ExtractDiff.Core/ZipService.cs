@@ -4,7 +4,7 @@ using System.Linq;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
 
-namespace ExtractDiff
+namespace ExtractDiff.Core
 {
     public class ZipService
     {

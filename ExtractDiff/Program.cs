@@ -1,23 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using ExtractDiff.Core;
 
 namespace ExtractDiff
 {
     class Program
     {
-        //private static string workingDirectory;
-        // UmbracoCms, UmbracoDeploy, UmbracoForms
-        //private static string packageName;
-        // UmbracoCms.7.12.2, UmbracoDeploy.v2.0.15, UmbracoForms.Files.7.0.6 - woohoo for consistency
-        //private static string packageNamePart;
         private static ZipService _zipService;
         private static PackageManager _packageManager;
         private static DiffService _diffService;
 
         static void Main(string[] args)
         {
+            if (args[0].Contains("?") || args[0].Contains("help", StringComparison.InvariantCultureIgnoreCase))
+            {
+                PrintHelp();
+                return;
+            }
+
             string workingDirectory = "";
             string packageName = "";
             string newPackageVersion = "";
@@ -86,5 +86,23 @@ namespace ExtractDiff
             newPackagePath.Replace(".zip", "").DeleteDirectory();
         }
 
+        private static void PrintHelp()
+        {
+            Console.WriteLine(
+                $"Extract diff will compare different versions of packages, and create diff packages, of what has actually changed in between versions.");
+            Console.WriteLine(
+                $"It is used to just apply changed files when upgrading, rather than having to overwrite all files.");
+            Console.WriteLine();
+            Console.WriteLine($"Invoke with:");
+            Console.WriteLine($@"- WorkingDirectory              - where can I work, and put my output - i.e. c:\temp");
+            Console.WriteLine($"- PackageName                   - the package name trying to make compare files of - i.e. 'UmbracoCms' or 'UmbracoDeploy'");
+            Console.WriteLine($@"- NewPackageVersion/Location    - path to new version package, or just the version, i.e. 'c:\temp\UmbracoCms.7.13.2' if the version isn't released yet or just '7.13.2' if its a released version");
+            Console.WriteLine($"- PackageNamePart               - the part of the .zip file that isnt part of the version number - i.e. 'UmbracoCms.' or 'UmbracoDeploy.v'");
+            Console.WriteLine("- DownloadUrlPattern            - where to download packages to compare - i.e. 'https://umbracoreleases.blob.core.windows.net/download/UmbracoCms.{{version}}.zip'");
+
+            Console.WriteLine();
+            Console.WriteLine(
+                $"Example: ExtractDiff.dll \"d:\\temp\" UmbracoCms \"C:\\Users\\user\\Downloads\\UmbracoCms.7.13.2.zip\" \"UmbracoCms.\" \"https://umbracoreleases.blob.core.windows.net/download/UmbracoCms.{{version}}.zip\"");
+        }
     }
 }

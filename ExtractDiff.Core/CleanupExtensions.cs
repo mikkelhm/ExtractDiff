@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace ExtractDiff
+namespace ExtractDiff.Core
 {
     public static class CleanupExtensions
     {
